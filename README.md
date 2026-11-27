@@ -30,7 +30,7 @@ mysql -h<host> -u<user> -p material_mgmt < docs/sql/demo-data.sql     # 可选
 mysql -h<host> -u<user> -p material_mgmt < docs/sql/verify.sql
 
 # 2. 配置
-cp deploy/env.example .env && vi .env
+cp .env.example .env && vi .env
 
 # 3. 构建
 for m in subsystem-0*; do (cd "$m/backend" && mvn -DskipTests package); done
