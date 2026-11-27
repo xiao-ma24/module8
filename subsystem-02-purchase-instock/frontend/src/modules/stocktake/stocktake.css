@@ -1,0 +1,34 @@
+/* ⑤ 盘点预警与补货页面并入 5182 后使用的通用样式（与主设计变量对齐） */
+.page-title { margin: 0; font-size: 20px; font-weight: 700; color: var(--text-1); }
+.page-desc { margin: 5px 0 0; font-size: 12.5px; color: var(--text-3); }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+.kpi { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; position: relative; overflow: hidden; }
+.kpi::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--primary); }
+.kpi.warn::after { background: #f59e0b; }
+.kpi.danger::after { background: #ef4444; }
+.kpi.ok::after { background: #10b981; }
+.kpi .label { font-size: 12.5px; color: var(--text-3); }
+.kpi .value { font-size: 26px; font-weight: 700; margin: 4px 0 2px; font-variant-numeric: tabular-nums; }
+.kpi .hint { font-size: 11.5px; color: #9aa7b8; }
+
+.entry-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.entry { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: #fff; cursor: pointer; transition: all .16s; }
+.entry:hover { border-color: #bfd0f7; box-shadow: 0 8px 20px rgba(37,99,235,.08); transform: translateY(-1px); }
+.entry .icon { width: 36px; height: 36px; border-radius: 10px; background: #eef4ff; color: var(--primary); display: grid; place-items: center; font-size: 17px; margin-bottom: 10px; }
+.entry .name { font-weight: 600; font-size: 14.5px; }
+.entry .desc { font-size: 12.5px; color: var(--text-3); margin-top: 5px; line-height: 1.6; }
+
+.hint-bar { display: flex; gap: 8px; background: #f4f8ff; border: 1px solid #dbe7ff; border-radius: 8px; padding: 9px 12px; font-size: 12.5px; color: #33507d; line-height: 1.6; margin-bottom: 12px; }
+.formula { font-family: Consolas, monospace; background: #f6f8fb; border-radius: 6px; padding: 1px 6px; font-size: 12px; }
+
+.mono { font-family: Consolas, monospace; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.muted { color: var(--text-3); }
+.danger { color: #dc2626; font-weight: 600; }
+.warn { color: #d97706; font-weight: 600; }
+.ok { color: #059669; font-weight: 600; }
+
+@media (max-width: 1200px) {
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .entry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>注册账号 · 学校物资管理大系统</title>
+<style>
+  :root {
+    --brand: #2563eb;
+    --brand-dark: #1e40af;
+    --brand-soft: #eef4ff;
+    --ink: #1e293b;
+    --muted: #64748b;
+    --faint: #94a3b8;
+    --line: #e9eef7;
+    --page: #f4f7fc;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, 'Segoe UI', sans-serif;
+    background-color: var(--page);
+    background-image:
+      radial-gradient(circle at 12% 0%, rgba(219, 234, 254, .9), rgba(244, 247, 252, 0) 46%),
+      radial-gradient(circle at 92% 4%, rgba(37, 99, 235, .07), rgba(244, 247, 252, 0) 42%),
+      linear-gradient(to right, rgba(37, 99, 235, .045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(37, 99, 235, .045) 1px, transparent 1px);
+    background-size: auto, auto, 42px 42px, 42px 42px;
+    padding: 28px 20px; color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  .card {
+    width: 520px; max-width: 100%; background: #fff; border-radius: 22px;
+    border: 1px solid var(--line);
+    padding: 28px 30px 24px;
+    box-shadow: 0 24px 60px rgba(15, 30, 61, .1), 0 2px 8px rgba(15, 30, 61, .04);
+  }
+  .head { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .logo {
+    width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center;
+    background: linear-gradient(135deg, #2563eb, #1e40af); color: #fff; font-size: 20px;
+    box-shadow: 0 8px 18px rgba(37, 99, 235, .26);
+  }
+  h1 { font-size: 19px; margin: 0; letter-spacing: .5px; color: var(--ink); }
+  .sub { font-size: 12px; color: var(--faint); margin: 4px 0 16px 56px; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #1d4ed8;
+    background: var(--brand-soft); border: 1px solid #dbe7ff; border-radius: 999px;
+    padding: 4px 10px; margin: 0 0 6px;
+  }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  .full { grid-column: 1 / -1; }
+  label { display: block; font-size: 12px; color: #475569; margin: 14px 0 6px; font-weight: 500; }
+  label i { color: #dc2626; font-style: normal; margin-left: 2px; }
+  input, select, textarea {
+    width: 100%; height: 42px; border-radius: 10px; border: 1px solid #e3e9f4;
+    background: #f7f9fd; padding: 0 13px; font-size: 13.5px; outline: none;
+    transition: background .18s, border-color .18s, box-shadow .18s;
+    color: var(--ink); font-family: inherit;
+  }
+  input::placeholder, textarea::placeholder { color: #a7b2c6; }
+  input:hover, select:hover, textarea:hover { border-color: #cddbf2; }
+  textarea { height: 64px; padding: 10px 13px; resize: vertical; line-height: 1.7; }
+  input:focus, select:focus, textarea:focus {
+    background: #fff; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(37, 99, 235, .14);
+  }
+  button {
+    width: 100%; height: 46px; margin-top: 22px; border: 0; border-radius: 12px; cursor: pointer;
+    background: linear-gradient(135deg, #2563eb, #1e40af); color: #fff;
+    font-family: inherit; font-size: 14.5px; font-weight: 600; letter-spacing: 4px; text-indent: 4px;
+    box-shadow: 0 10px 24px rgba(37, 99, 235, .26);
+    transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+  }
+  button:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(37, 99, 235, .34); filter: brightness(1.03); }
+  button:active { transform: translateY(0); box-shadow: 0 8px 18px rgba(37, 99, 235, .24); }
+  button:disabled { opacity: .7; cursor: not-allowed; transform: none; box-shadow: none; }
+  .msg { min-height: 18px; font-size: 12px; color: #dc2626; margin-top: 10px; line-height: 1.6; }
+  .msg:not(:empty) {
+    background: #fef2f2; border: 1px solid #fee2e2; border-radius: 8px; padding: 8px 10px;
+  }
+  .tip {
+    margin-top: 14px; background: #f7f9fd; border: 1px solid var(--line); border-radius: 12px;
+    padding: 10px 12px; font-size: 12px; color: var(--muted); line-height: 1.8;
+  }
+  .tip b { color: var(--brand); }
+  .foot { margin-top: 14px; text-align: center; font-size: 12px; color: var(--faint); }
+  .foot a { color: var(--brand); text-decoration: none; font-weight: 600; }
+  .foot a:hover { text-decoration: underline; }
+  .ok-card { text-align: center; padding: 12px 4px 4px; }
+  .ok-ico {
+    width: 54px; height: 54px; margin: 0 auto 14px; border-radius: 50%;
+    display: grid; place-items: center; font-size: 26px;
+    background: var(--brand-soft); color: var(--brand);
+    border: 1px solid #dbe7ff;
+  }
+  .ok-card h2 { font-size: 18px; margin: 0 0 6px; color: var(--ink); }
+  .ok-card p { font-size: 13px; color: var(--muted); margin: 0 0 16px; line-height: 1.8; }
+  .kv {
+    text-align: left; background: #f7f9fd; border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px 14px; font-size: 12.5px; color: #475569; line-height: 2;
+  }
+  .kv span { color: var(--faint); display: inline-block; width: 72px; }
+  .kv b { color: var(--ink); font-weight: 600; }
+  .tag {
+    display: inline-block; font-size: 11px; color: #b45309; background: #fffbeb;
+    border: 1px solid #fde68a; border-radius: 999px; padding: 1px 8px; margin-left: 6px;
+  }
+  .back {
+    display: block; margin-top: 18px; text-align: center; font-size: 13px;
+    color: var(--brand); text-decoration: none; font-weight: 600;
+  }
+  .back:hover { text-decoration: underline; }
+
+  @media (max-width: 560px) {
+    body { padding: 18px 14px; align-items: flex-start; }
+    .card { padding: 22px 18px 20px; border-radius: 20px; }
+    .grid { grid-template-columns: 1fr; }
+    .sub { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="head">
+    <div class="logo">🏫</div>
+    <h1>学校物资管理大系统</h1>
+  </div>
+  <p class="sub">统一身份认证 · 注册账号</p>
+  <div class="badge">🔒 HTTPS 加密连接 · 注册信息自动录入平台用户主数据</div>
+
+  <form id="form" autocomplete="off">
+    <div class="grid">
+      <div>
+        <label for="userNo">工号 / 学号<i>*</i></label>
+        <input id="userNo" placeholder="如 T0100 / 20230001" />
+        <select id="teacherNo" style="display:none"></select>
+      </div>
+      <div>
+        <label for="userName">姓名<i>*</i></label>
+        <input id="userName" placeholder="与证件一致" />
+      </div>
+
+      <div>
+        <label for="userType">人员类型<i>*</i></label>
+        <select id="userType"></select>
+      </div>
+      <div>
+        <label for="deptId">所属部门<i>*</i></label>
+        <select id="deptId"></select>
+      </div>
+
+      <div>
+        <label for="applyRole">申请岗位<i>*</i></label>
+        <select id="applyRole"></select>
+      </div>
+      <div>
+        <label for="phone">手机号<i>*</i></label>
+        <input id="phone" placeholder="11 位手机号" maxlength="11" />
+      </div>
+
+      <div class="full">
+        <label for="email">邮箱</label>
+        <input id="email" placeholder="name@school.edu.cn" />
+      </div>
+
+      <div>
+        <label for="password">登录密码<i>*</i></label>
+        <input id="password" type="password" placeholder="至少 6 位" />
+      </div>
+      <div>
+        <label for="confirmPassword">确认密码<i>*</i></label>
+        <input id="confirmPassword" type="password" placeholder="再次输入" />
+      </div>
+
+      <div class="full">
+        <label for="remark">申请说明</label>
+        <textarea id="remark" placeholder="如：新入职采购员，负责实验耗材采购（选填）"></textarea>
+      </div>
+    </div>
+
+    <button id="btn" type="submit">提 交 注 册</button>
+    <div class="msg" id="msg"></div>
+  </form>
+
+  <div class="tip">
+    注册提交后，系统自动把工号、姓名、部门、岗位、联系方式录入用户主数据，账号状态为
+    <b>待启用</b>；管理员在「平台管理端 → 用户管理 → 待启用」审核启用后，即可用工号登录。
+  </div>
+  <div class="foot">已有账号？<a href="./index.html">返回登录</a></div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id)
+  const msg = $('msg')
+  const btn = $('btn')
+  const form = $('form')
+  let teachers = []
+
+  // 教职工工号只能从师资系统在册名单中选择；学生/外部人员仍手填学号
+  function syncUserNoInput() {
+    const staff = $('userType').value === '1'
+    $('teacherNo').style.display = staff ? '' : 'none'
+    $('userNo').style.display = staff ? 'none' : ''
+  }
+
+  function pickTeacher() {
+    const t = teachers.find(x => x.teacherNo === $('teacherNo').value)
+    if (!t) return
+    $('userName').value = t.teacherName
+    if (t.phone) $('phone').value = t.phone
+    if (t.deptId) $('deptId').value = t.deptId
+  }
+
+  // 加载部门 / 岗位 / 人员类型 / 师资系统工号
+  async function loadOptions() {
+    try {
+      const res = await fetch('/api/v1/auth/register/options')
+      const d = await res.json()
+      if (d.code !== 0) throw new Error(d.msg || '加载失败')
+      const { depts = [], roles = [], userTypes = [], teachers: ts = [], minPwdLength = 6 } = d.data || {}
+      teachers = ts
+
+      $('deptId').innerHTML = '<option value="">请选择部门</option>' +
+        depts.map(x => `<option value="${x.deptId}">${x.deptName}</option>`).join('')
+
+      $('applyRole').innerHTML = '<option value="">请选择岗位</option>' +
+        roles.map(x => `<option value="${x.roleCode}">${x.roleName}</option>`).join('')
+
+      $('userType').innerHTML = userTypes
+        .map(x => `<option value="${x.value}">${x.label}</option>`).join('')
+
+      $('teacherNo').innerHTML = '<option value="">请选择师资系统工号</option>' +
+        ts.map(t => `<option value="${t.teacherNo}" ${t.registered ? 'disabled' : ''}>` +
+          `${t.teacherNo} ${t.teacherName}（${t.deptName || '未映射部门'}）${t.registered ? ' · 已建档' : ''}</option>`).join('')
+      syncUserNoInput()
+
+      $('password').placeholder = `至少 ${minPwdLength} 位`
+      $('password').dataset.min = minPwdLength
+    } catch (e) {
+      msg.textContent = '注册选项加载失败：' + (e.message || '请确认认证服务已启动（8080）')
+    }
+  }
+
+  $('userType').addEventListener('change', syncUserNoInput)
+  $('teacherNo').addEventListener('change', pickTeacher)
+
+  function showSuccess(d) {
+    $('card').innerHTML = `
+      <div class="ok-card">
+        <div class="ok-ico">✓</div>
+        <h2>注册成功，信息已自动录入</h2>
+        <p>账号已进入「待启用」状态，管理员启用后即可登录。</p>
+        <div class="kv">
+          <div><span>工号/学号</span><b>${d.userNo}</b></div>
+          <div><span>姓名</span><b>${d.userName}</b></div>
+          <div><span>申请岗位</span><b>${d.roleName}</b></div>
+          <div><span>账号状态</span><b>${d.statusText}</b><span class="tag">待管理员启用</span></div>
+        </div>
+        <a class="back" href="./index.html">返回登录页</a>
+      </div>`
+  }
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault()
+    msg.textContent = ''
+
+    const staff = $('userType').value === '1'
+    const payload = {
+      userNo: staff ? $('teacherNo').value : $('userNo').value.trim().toUpperCase(),
+      userName: $('userName').value.trim(),
+      userType: $('userType').value,
+      deptId: $('deptId').value,
+      applyRole: $('applyRole').value,
+      phone: $('phone').value.trim(),
+      email: $('email').value.trim(),
+      password: $('password').value,
+      confirmPassword: $('confirmPassword').value,
+      remark: $('remark').value.trim()
+    }
+
+    const min = Number($('password').dataset.min || 6)
+    if (!payload.userNo) { msg.textContent = staff ? '请从师资系统选择工号' : '请输入工号/学号'; return }
+    if (!payload.userName) { msg.textContent = '请输入姓名'; return }
+    if (!payload.deptId) { msg.textContent = '请选择所属部门'; return }
+    if (!payload.applyRole) { msg.textContent = '请选择申请岗位'; return }
+    if (!/^1\d{10}$/.test(payload.phone)) { msg.textContent = '请输入 11 位手机号'; return }
+    if (!payload.password || payload.password.length < min) { msg.textContent = `密码长度不能少于 ${min} 位`; return }
+    if (payload.password !== payload.confirmPassword) { msg.textContent = '两次输入的密码不一致'; return }
+
+    btn.disabled = true
+    btn.textContent = '提交中…'
+    try {
+      const res = await fetch('/api/v1/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      const d = await res.json()
+      if (d.code !== 0) throw new Error(d.msg || '注册失败')
+      showSuccess(d.data)
+    } catch (err) {
+      msg.textContent = err.message || '注册失败，请稍后重试'
+      btn.disabled = false
+      btn.textContent = '提 交 注 册'
+    }
+  })
+
+  loadOptions()
+</script>
+</body>
+</html>

@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>统一身份认证 · 学校物资管理大系统</title>
+<style>
+  :root {
+    --brand: #2563eb;
+    --brand-dark: #1e40af;
+    --brand-soft: #eef4ff;
+    --ink: #1e293b;
+    --muted: #64748b;
+    --faint: #94a3b8;
+    --line: #e9eef7;
+    --page: #f4f7fc;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--page); color: var(--ink);
+    font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page { display: grid; grid-template-columns: 46% 1fr; min-height: 100vh; }
+
+  /* ---------- 左侧品牌区 ---------- */
+  .brand {
+    position: relative; overflow: hidden; isolation: isolate;
+    display: flex;
+    padding: 44px 48px 38px;
+    color: #fff;
+    background: linear-gradient(180deg, #0c1a33, #132a55 58%, #1a3a75);
+  }
+  .brand::before, .brand::after {
+    content: ''; position: absolute; border-radius: 50%; pointer-events: none; z-index: 0;
+  }
+  .brand::before {
+    width: 440px; height: 440px; left: -150px; top: -160px;
+    background: radial-gradient(circle at center, rgba(37, 99, 235, .58), rgba(37, 99, 235, 0) 68%);
+    filter: blur(22px);
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+  .brand::after {
+    width: 560px; height: 560px; right: -220px; bottom: -240px;
+    background: radial-gradient(circle at center, rgba(59, 130, 246, .44), rgba(59, 130, 246, 0) 70%);
+    filter: blur(26px);
+    animation: drift 26s ease-in-out infinite alternate-reverse;
+  }
+  .brand-glow {
+    position: absolute; z-index: 0; width: 320px; height: 320px;
+    left: 32%; top: 42%; pointer-events: none;
+    background: radial-gradient(circle at center, rgba(96, 165, 250, .26), rgba(96, 165, 250, 0) 68%);
+    filter: blur(30px);
+  }
+  .brand-lines {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .55;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, .045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, .045) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(circle at 30% 30%, #000 0, transparent 78%);
+    mask-image: radial-gradient(circle at 30% 30%, #000 0, transparent 78%);
+  }
+  @keyframes drift {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to { transform: translate3d(18px, 26px, 0) scale(1.06); }
+  }
+
+  .brand-inner {
+    position: relative; z-index: 2; width: 100%;
+    display: flex; flex-direction: column; justify-content: space-between; gap: 40px;
+  }
+  .brand-top { display: flex; align-items: center; gap: 13px; }
+  .brand-mark {
+    width: 46px; height: 46px; flex: 0 0 46px; border-radius: 14px;
+    display: grid; place-items: center;
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(191, 219, 254, .28);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 8px 20px rgba(3, 10, 26, .3);
+  }
+  .brand-top strong {
+    display: block; font-size: 16.5px; font-weight: 600; letter-spacing: .6px;
+    color: #f1f6ff;
+  }
+  .brand-top em {
+    display: block; font-style: normal; margin-top: 3px;
+    font-size: 11px; letter-spacing: 2.4px; text-transform: uppercase;
+    color: rgba(147, 197, 253, .78);
+  }
+
+  .brand-main h1 {
+    margin: 0 0 14px; font-size: clamp(26px, 2.5vw, 34px); font-weight: 700;
+    line-height: 1.34; letter-spacing: .7px; color: #fff;
+  }
+  .brand-sub {
+    margin: 0; max-width: 360px; font-size: 13.5px; line-height: 1.95;
+    color: rgba(203, 222, 250, .82);
+  }
+  .features { list-style: none; margin: 34px 0 0; padding: 0; display: grid; gap: 18px; }
+  .features li { display: flex; align-items: flex-start; gap: 13px; }
+  .f-ico {
+    width: 34px; height: 34px; flex: 0 0 34px; border-radius: 50%;
+    display: grid; place-items: center; color: #93c5fd;
+    background: rgba(255, 255, 255, .075);
+    border: 1px solid rgba(255, 255, 255, .12);
+  }
+  .features li > div > strong {
+    display: block; font-size: 13px; font-weight: 600; color: rgba(235, 243, 255, .95);
+    letter-spacing: .3px;
+  }
+  .features li > div > span {
+    display: block; margin-top: 3px; font-size: 12px; line-height: 1.75;
+    color: rgba(203, 222, 250, .66);
+  }
+  .brand-foot {
+    font-size: 11.5px; letter-spacing: .4px; color: rgba(203, 222, 250, .42);
+  }
+
+  /* ---------- 右侧登录区 ---------- */
+  .panel {
+    position: relative; display: flex; align-items: center; justify-content: center;
+    padding: 44px 32px; background-color: var(--page);
+    background-image:
+      linear-gradient(to right, rgba(37, 99, 235, .05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(37, 99, 235, .05) 1px, transparent 1px);
+    background-size: 42px 42px;
+  }
+  .panel::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(circle at 78% 12%, rgba(219, 234, 254, .85), rgba(244, 247, 252, 0) 62%);
+  }
+
+  .card {
+    position: relative; z-index: 1; width: 100%; max-width: 424px;
+    background: #fff; border: 1px solid var(--line); border-radius: 22px;
+    padding: 38px 36px 30px;
+    box-shadow: 0 24px 60px rgba(15, 30, 61, .1), 0 2px 8px rgba(15, 30, 61, .04);
+    animation: rise .5s ease-out both;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card-head h2 { margin: 0 0 8px; font-size: 24px; font-weight: 700; letter-spacing: .6px; }
+  .card-head p {
+    margin: 0; font-size: 13px; line-height: 1.8; color: var(--muted); max-width: 330px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px; margin: 16px 0 4px;
+    font-size: 11.5px; color: #1d4ed8; background: var(--brand-soft);
+    border: 1px solid #dbe7ff; border-radius: 999px; padding: 4px 10px;
+  }
+
+  .field { margin-top: 18px; }
+  .field label {
+    display: block; margin-bottom: 8px; font-size: 12.5px; font-weight: 500; color: #475569;
+  }
+  .control { position: relative; }
+  .ico {
+    position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+    display: grid; place-items: center; color: var(--faint);
+    pointer-events: none; transition: color .18s;
+  }
+  input {
+    width: 100%; height: 46px; border-radius: 10px;
+    border: 1px solid #e3e9f4; background: #f7f9fd;
+    padding: 0 14px 0 41px; font-size: 14px; color: var(--ink);
+    font-family: inherit; outline: none; transition: background .18s, border-color .18s, box-shadow .18s;
+  }
+  input::placeholder { color: #a7b2c6; }
+  input:hover { border-color: #cddbf2; }
+  input:focus {
+    background: #fff; border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .14);
+  }
+  .control:focus-within .ico { color: var(--brand); }
+  #pwd { padding-right: 48px; }
+
+  .eye {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    width: 32px; height: 32px; display: grid; place-items: center;
+    border: 0; border-radius: 8px; background: transparent; color: var(--faint);
+    cursor: pointer; transition: color .16s, background .16s;
+  }
+  .eye:hover { color: var(--brand); background: var(--brand-soft); }
+  .eye:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+
+  .btn-submit {
+    width: 100%; height: 48px; margin-top: 26px; border: 0; border-radius: 12px;
+    cursor: pointer; color: #fff; font-family: inherit; font-size: 15px; font-weight: 600;
+    letter-spacing: 6px; text-indent: 6px;
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, .26);
+    transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+  }
+  .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(37, 99, 235, .34); filter: brightness(1.03); }
+  .btn-submit:active { transform: translateY(0); box-shadow: 0 8px 18px rgba(37, 99, 235, .24); }
+  .btn-submit:disabled { opacity: .7; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .msg { min-height: 18px; margin-top: 10px; font-size: 12.5px; line-height: 1.6; color: #dc2626; }
+  .msg:not(:empty) {
+    background: #fef2f2; border: 1px solid #fee2e2; border-radius: 8px; padding: 8px 10px;
+  }
+
+  .register { margin-top: 14px; text-align: center; font-size: 12.5px; color: var(--muted); }
+  .register a { color: var(--brand); font-weight: 600; text-decoration: none; }
+  .register a:hover { text-decoration: underline; }
+  .register em { font-style: normal; color: var(--faint); }
+
+  .demo {
+    margin-top: 18px; background: #f7f9fd; border: 1px solid var(--line); border-radius: 12px;
+    padding: 10px 13px; font-size: 12px; line-height: 1.9; color: var(--muted);
+  }
+  .demo b { color: var(--brand); font-weight: 600; }
+  .foot { margin-top: 16px; text-align: center; font-size: 11.5px; color: #a3aec2; }
+
+  /* ---------- 窄屏 ---------- */
+  @media (max-width: 900px) {
+    .page { grid-template-columns: 1fr; }
+    .brand { padding: 22px 22px 24px; align-items: center; }
+    .brand-inner { gap: 0; }
+    .brand-main, .brand-foot { display: none; }
+    .brand-top strong { font-size: 15px; }
+    .brand-top em { letter-spacing: 1.8px; }
+    .brand::before { width: 300px; height: 300px; left: -110px; top: -140px; }
+    .brand::after { width: 320px; height: 320px; right: -140px; bottom: -170px; }
+    .brand-glow { display: none; }
+    .panel { padding: 26px 18px 34px; align-items: flex-start; }
+    .card { max-width: 460px; padding: 28px 22px 24px; border-radius: 20px; }
+    .card-head h2 { font-size: 21px; }
+    .badge { margin-top: 14px; }
+  }
+  /* ---------- 矮屏（小窗口/笔记本），压缩纵向间距避免出现滚动条 ---------- */
+  @media (max-height: 820px) and (min-width: 901px) {
+    .brand { padding: 22px 42px 16px; }
+    .brand-inner { gap: 14px; }
+    .brand-main h1 { font-size: 25px; margin-bottom: 9px; }
+    .brand-sub { font-size: 12.5px; line-height: 1.8; }
+    .features { margin-top: 16px; gap: 10px; }
+    .brand-foot { font-size: 11px; }
+    .panel { padding: 26px 30px; }
+    .card { padding: 28px 32px 22px; }
+    .card-head h2 { font-size: 22px; }
+    .badge { margin: 12px 0 2px; }
+    .field { margin-top: 13px; }
+    .demo { margin-top: 14px; padding: 8px 12px; line-height: 1.8; }
+    .foot { margin-top: 12px; }
+  }
+  @media (max-width: 420px) {
+    .panel { padding: 18px 12px 26px; }
+    .card { padding: 24px 18px 20px; }
+    .brand { padding: 18px 18px 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .brand::before, .brand::after, .card { animation: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <aside class="brand">
+    <span class="brand-lines" aria-hidden="true"></span>
+    <span class="brand-glow" aria-hidden="true"></span>
+    <div class="brand-inner">
+      <div class="brand-top">
+        <div class="brand-mark" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#bfdbfe" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 10.4 12 4l9 6.4" />
+            <path d="M5.2 10.2v9.3h13.6v-9.3" />
+            <path d="M9.6 19.5v-5.1h4.8v5.1" />
+          </svg>
+        </div>
+        <div>
+          <strong>学校物资管理大系统</strong>
+          <em>Unified Portal</em>
+        </div>
+      </div>
+
+      <div class="brand-main">
+        <h1>学校物资管理大系统</h1>
+        <p class="brand-sub">一个账号贯通采购、仓储、资产与平台管理，覆盖全校物资业务全流程。</p>
+        <ul class="features">
+          <li>
+            <span class="f-ico" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3.2 19 6v5.4c0 4.2-2.8 7.6-7 9.4-4.2-1.8-7-5.2-7-9.4V6l7-2.8Z" />
+                <path d="m9 12.1 2.1 2.1 4-4" />
+              </svg>
+            </span>
+            <div>
+              <strong>统一身份认证</strong>
+              <span>一套账号进入全部子系统</span>
+            </div>
+          </li>
+          <li>
+            <span class="f-ico" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="8" r="3.2" />
+                <path d="M3.4 19.4c0-3 2.5-5.1 5.6-5.1s5.6 2.1 5.6 5.1" />
+                <path d="M16.4 5.2a3.2 3.2 0 0 1 0 5.9" />
+                <path d="M18.4 14.7c1.6.6 2.6 2.1 2.6 4.1" />
+              </svg>
+            </span>
+            <div>
+              <strong>角色自动分流</strong>
+              <span>按岗位显示可用功能</span>
+            </div>
+          </li>
+          <li>
+            <span class="f-ico" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="8.6" />
+                <path d="M12 7.3V12l3.2 2" />
+              </svg>
+            </span>
+            <div>
+              <strong>操作全程留痕</strong>
+              <span>关键动作可追溯</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="brand-foot">© 2026 学校物资管理项目组</div>
+    </div>
+  </aside>
+
+  <main class="panel">
+    <div class="card">
+      <div class="card-head">
+        <h2>欢迎登录</h2>
+        <p>请使用平台账号登录，系统将根据账号角色自动进入对应子系统。</p>
+        <div class="badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="4.5" y="10.5" width="15" height="9.5" rx="2.2" />
+            <path d="M8.2 10.5V7.8a3.8 3.8 0 0 1 7.6 0v2.7" />
+          </svg>
+          安全登录 · 登录后按账号角色自动进入对应子系统
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="userNo">工号 / 账号</label>
+        <div class="control">
+          <span class="ico" aria-hidden="true">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8.2" r="3.6" />
+              <path d="M5.2 19.6c0-3.3 3-5.7 6.8-5.7s6.8 2.4 6.8 5.7" />
+            </svg>
+          </span>
+          <input id="userNo" value="T0002" autocomplete="username" placeholder="工号 / 学号" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="pwd">密码</label>
+        <div class="control">
+          <span class="ico" aria-hidden="true">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4.4" y="10.4" width="15.2" height="9.6" rx="2.3" />
+              <path d="M8.1 10.4V7.7a3.9 3.9 0 0 1 7.8 0v2.7" />
+              <circle cx="12" cy="15.2" r="1.1" fill="currentColor" stroke="none" />
+            </svg>
+          </span>
+          <input id="pwd" type="password" value="123456" placeholder="请输入密码" autocomplete="current-password" />
+          <button class="eye" id="pwd-eye" type="button" aria-label="显示密码">
+            <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2.6 12S6 6.4 12 6.4 21.4 12 21.4 12 18 17.6 12 17.6 2.6 12 2.6 12Z" />
+              <circle cx="12" cy="12" r="2.7" />
+            </svg>
+            <svg class="eye-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+              <path d="M4 4.4 20 20" />
+              <path d="M9.6 6.8A9.9 9.9 0 0 1 12 6.4c6 0 9.4 5.6 9.4 5.6a17 17 0 0 1-3 3.7" />
+              <path d="M6.4 8.3A16.7 16.7 0 0 0 2.6 12S6 17.6 12 17.6c1.1 0 2.2-.2 3.2-.5" />
+              <path d="M10.1 10.3a2.7 2.7 0 0 0 3.7 3.8" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <button id="btn" class="btn-submit">登 录</button>
+      <div class="msg" id="msg"></div>
+
+      <div class="register">没有账号？<a href="./register.html">自助注册</a> <em>（提交后由管理员启用）</em></div>
+
+      <div class="demo">
+        演示账号：<b>T0002 / 123456</b>（采购员）　<b>T0003 / 123456</b>（库管员）　<b>T0005 / 123456</b>（管理员）
+      </div>
+      <div class="foot">账号由平台管理端统一建立，停用后立即失效</div>
+      <div class="foot" style="margin-top:6px">
+        直达业务系统：
+        <a href="http://localhost:5182/login" target="_blank">采购 · 领用 · 借用一体化系统</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const ADMIN_URL = 'http://localhost:5180/#/login?handoff='
+  const MAIN_URL = 'http://localhost:5182/login?skip=1&uid='
+
+  const userNo = document.getElementById('userNo')
+  const pwd = document.getElementById('pwd')
+  const msg = document.getElementById('msg')
+  const btn = document.getElementById('btn')
+
+  function encode(obj) {
+    return btoa(unescape(encodeURIComponent(JSON.stringify(obj))))
+  }
+
+  async function submit() {
+    const no = userNo.value.trim().toUpperCase()
+    const p = pwd.value
+    msg.textContent = ''
+    if (!no) { msg.textContent = '请输入登录名'; return }
+    if (!p) { msg.textContent = '请输入密码'; return }
+
+    btn.disabled = true
+    btn.textContent = '认证中…'
+    try {
+      const res = await fetch('/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userNo: no, password: p })
+      })
+      const d = await res.json()
+      if (d.code !== 0) throw new Error(d.msg || '登录失败')
+
+      const u = d.data.user
+      const owned = u.roles && u.roles.length ? u.roles : [u.roleCode]
+
+      // 统一身份认证：管理员进平台端，其余角色统一进业务大系统（采购/领用/借用同一入口）
+      if (owned.includes('ADMIN')) {
+        // base64 中的 + / = 必须编码，否则会被当成 URL 参数分隔符
+        location.href = ADMIN_URL + encodeURIComponent(encode(d.data))
+      } else {
+        location.href = MAIN_URL + u.userId
+      }
+    } catch (e) {
+      msg.textContent = '登录失败：' + (e.message || '请确认认证服务已启动')
+      btn.disabled = false
+      btn.textContent = '登 录'
+    }
+  }
+
+  btn.addEventListener('click', submit)
+  pwd.addEventListener('keyup', e => { if (e.key === 'Enter') submit() })
+</script>
+<script>
+  // 仅控制密码可见性，不参与登录逻辑与请求参数
+  (function () {
+    var input = document.getElementById('pwd')
+    var eye = document.getElementById('pwd-eye')
+    if (!input || !eye) return
+    var open = eye.querySelector('.eye-open')
+    var off = eye.querySelector('.eye-off')
+    eye.addEventListener('click', function () {
+      var show = input.type === 'password'
+      input.type = show ? 'text' : 'password'
+      eye.setAttribute('aria-label', show ? '隐藏密码' : '显示密码')
+      if (open && off) {
+        open.style.display = show ? 'none' : 'block'
+        off.style.display = show ? 'block' : 'none'
+      }
+    })
+  })()
+</script>
+</body>
+</html>

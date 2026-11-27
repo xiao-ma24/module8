@@ -1,0 +1,48 @@
+server:
+  port: ${PORT:8082}
+
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/${DB_NAME:material_mgmt}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+    username: ${DB_USER:root}
+    password: ${DB_PASS:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: delFlag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# AI 大模型配置（OpenAI 兼容接口，任意厂商均可：智谱/DeepSeek/通义/OpenAI...）
+# 不配置 AI_API_KEY 时自动降级为内置规则引擎（演示模式），功能依然可用
+ai:
+  base-url: ${AI_BASE_URL:https://api.deepseek.com/v1}
+  api-key: ${AI_API_KEY:}
+  model: ${AI_MODEL:deepseek-chat}
+  timeout: ${AI_TIMEOUT:15000}
+
+# 统一认证接入（详见 docs/delivery/认证接入说明.md）
+auth:
+  # DBA 联调时置 true：未登录返回 HTTP 401，角色不符返回 HTTP 403
+  enforce: ${AUTH_ENFORCE:false}
+  identity-cookie-name: ${AUTH_COOKIE_NAME:DBA_TOKEN}
+  identity-user-header: ${AUTH_USER_HEADER:X-DBA-USER-ID}
+  identity-role-header: ${AUTH_ROLE_HEADER:X-DBA-ROLE}
+  identity-business-header: ${AUTH_BUSINESS_HEADER:X-DBA-BUSINESS-ID}
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:*,http://127.0.0.1:*}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.school.material.purchase: ${LOG_LEVEL:info}
